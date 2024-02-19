@@ -1,0 +1,478 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+nav>div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+nav>div>a>img {
+  height: 60px;
+}
+
+nav>div:nth-child(2) {
+  margin-left: 100px;
+}
+
+.product_main {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 70%;
+  margin:  auto;
+  text-align: center;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #e2e7e7;
+  max-width: 1100px;
+  min-height: 800px;
+  margin: 0 auto;
+  margin-bottom: 50px;
+  box-shadow: 8px 12px 30px;
+  color: #919495;
+  font-weight: normal;
+  text-align: center;
+  font-size: 25px;
+  position: relative;
+}
+h4>div {
+  width: 300px;
+  border: 15px solid green;
+  padding: 50px;
+  margin: 20px;
+}
+.product-detailsdesc {
+  padding: 25px;
+  width: auto;
+  text-align: center;
+}
+.product-detailhome {
+  padding: 25px;
+  width: 1750px;
+  text-align: center;
+}
+.product-details {
+  padding: 30px;
+  width: 40%;
+ 
+}
+
+.product-details h1 {
+  color: rgb(0, 0, 0);
+  font-family: "Pacifico", cursive;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.product-details h2 {
+  color: #333;
+  font-family: "Pacifico", cursive;
+  margin-bottom: 35px;
+  width: 100%;
+}
+
+.product-details h3 {
+  color: #333;
+  font-family: "Pacifico", cursive;
+  margin-bottom: 35px;
+  width: 100%;
+}
+.product-home h3 {
+  color: #333;
+  font-family: "Pacifico", cursive;
+  margin-bottom: 35px;
+  width: 100%;
+}
+.product-details article {
+  color: #333;
+  font-family: "Pacifico", cursive;
+  margin-bottom: 35px;
+  display: auto;
+  justify-content: center;
+  width: auto;
+}
+.product-details button {
+  width: 500px;
+  height: 50px;
+  margin-top: 500px;
+  background-color: #ffd000;
+  border-radius: 0;
+  color: rgb(0, 0, 0);
+  font-size: 40px;
+  box-shadow: 2px 2px 7px #534d17;
+}
+
+.product-details button:hover,
+.product-details button:active,
+.product-details button:focus {
+  color: #fff;
+}
+
+.product-image {
+  display: auto;
+  justify-content:  center;
+  width: auto;
+
+}
+
+.product-image>img {
+  width: 95%;
+
+}
+
+@media (max-width: 700px) {
+  .product-card {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 540px) {
+  .product-card {
+    overflow: hidden;
+    margin-bottom: 50px;
+  }
+
+  .product-details {
+    width: 60%;
+    z-index: 1;
+  }
+
+  .product-image {
+    width: 100%;
+    left: 40%;
+    top: -50px;
+  }
+}
+
+@media (max-width: 440px) {
+  .product-details {
+    width: 65%;
+  }
+}
+
+@media (max-width: 365px) {
+  .product-details {
+    width: 80%;
+    position: relative;
+
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
+* {
+  box-sizing: border-box;
+
+}
+
+body {
+  margin: auto;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: auto;
+  background: linear-gradient(315deg, rgba(0, 128, 0, 0.8) 3%, rgb(175, 238, 57) 38%, rgba(14, 117, 5, 0.8) 68%, rgb(188, 224, 24) 98%);
+  animation: gradient calc(15s + 5s * var(--n, 1)) ease infinite; /* Adjusted animation duration */
+  background-size: 400% 400%;
+  background-attachment: fixed;
+}
+
+@keyframes gradient {
+  0%, 100% {
+      background-position: 0% 0%;
+  }
+  50% {
+      background-position: 100% 100%;
+  }
+}
+
+.wave {
+  background: rgb(0 128 0 / 25%); /* Adjusted to greenish tone */
+  border-radius: 1000% 1000% 0 0;
+  position: fixed;
+  width: 200%;
+  height: 12em;
+  animation: wave calc(15s + 5s * var(--n, 1)) linear infinite; /* Adjusted animation duration */
+  transform: translate3d(0, 0, 0);
+  opacity: 0.8;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.wave:nth-of-type(2) {
+  --n: -1; /* Added a variation for the second wave */
+  bottom: -1.25em;
+  animation: wave calc(22s + 5s * var(--n, 1)) linear reverse infinite; /* Adjusted animation duration */
+  opacity: 0.8;
+}
+
+.wave:nth-of-type(3) {
+  --n: -2; /* Added a variation for the third wave */
+  bottom: -2.5em;
+  animation: wave calc(25s + 5s * var(--n, 1)) linear reverse infinite; /* Adjusted animation duration */
+  opacity: 0.9;
+}
+
+@keyframes wave {
+  0%, 100% {
+      transform: translateX(0);
+  }
+
+  25% {
+      transform: translateX(-50%);
+  }
+
+  50% {
+      transform: translateX(-100%);
+  }
+
+  75% {
+      transform: translateX(-50%);
+  }
+}
+
+/* Style the header */
+header {
+  background-color: rgb(22, 133, 22);
+  padding: 30px;
+  text-align: top;
+  font-size: 35px;
+  color: rgb(42, 129, 24);
+  height: 120px;
+  width: auto;
+}
+
+li a {
+  display: block;
+  color: rgb(255, 255, 255);
+  padding: 16px;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: larger;
+}
+
+nav li a.active {
+  background-color: rgb(2, 130, 250);
+  color: white;
+}
+
+li a:not(.active) {
+  background-color: rgb(0, 0, 0);
+  color: white;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+
+  width: auto;
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
+  padding: 0;
+  font-size: 20px;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  text-decoration: none;
+  background-color: #000000;
+  animation: glow 3.3s linear infinite alternate;
+
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+.highlight{
+  color: #ffffff;
+  background:#000000;
+}
+.highlight ul li a:hover
+ {
+   background-color:blue;
+}
+
+article {
+
+  padding: 20px;
+  width: 70%;
+  overflow: auto;
+
+  color: rgb(0, 0, 0);
+  background-repeat: no-repeat;
+  text-align: auto;
+  font-size: 28px;
+
+}
+
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: rgb(0, 0, 0);
+  padding: 5px;
+  text-align: center;
+  color: white;
+
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #3305ff;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(88, 80, 80, 0);
+  width: 300px;
+  border: 15px solid rgb(0, 0, 0);
+  padding: 50px;
+  margin: 20px;
+}
+
+
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 500px) {
+
+  nav,
+  article {
+    width: 100%;
+    height: auto;
+  }
+
+
+}
+
+@keyframes glow {
+  5% {
+    box-shadow: 0 0 20px rgb(255, 4, 4);
+  }
+
+  20% {
+    box-shadow: 0 0 15px rgb(255, 104, 4);
+  }
+
+  40% {
+    box-shadow: 0 0 15px rgb(255, 217, 4);
+  }
+ 60% {
+    box-shadow: 0 0 15px rgb(46, 255, 4);
+  }
+
+  80% {
+    box-shadow: 0 0 15px rgb(4, 50, 255);
+  }
+  100% {
+    box-shadow: 0 0 15px rgb(176, 4, 255);
+  }
+
+}
+
+
+a {
+  text-decoration: none;
+  color: #FFFFFF;
+}
+a{
+  text-decoration: none;
+}
+
+ button {
+  align-items: center;
+  background-image: linear-gradient(144deg, #356928, #2a9227 50%, #4fb420);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 18px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 140px;
+  padding: 3px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+button:active,
+button:hover {
+  outline: 0;
+}
+.up button {
+  align-items: center;
+  background-image: linear-gradient(144deg, #356928, #2a9227 50%, #4fb420);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: flex;
+  font-family: Phantomsans, sans-serif;
+  font-size: 18px;
+  justify-content: center;
+  line-height: 1em;
+  height: 500px;
+  min-height: 250px;
+  max-width: 700px;
+  min-width: 140px;
+  padding: 3px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+
+button span {
+  background-color: rgb(5, 6, 45);
+  padding: 16px 24px;
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  transition: 300ms;
+}
+
+button:hover span {
+  background: none;
+}
+
+button:active {
+  transform: scale(0.9);
+}
