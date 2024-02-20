@@ -5,7 +5,7 @@ session_start();
 
 // Set up database connection
 $host = "localhost";
-$user = "root";
+$user = "Kuhlo731";
 $psw = "yqt";
 $db = "RecyclingDB";
 $conn = mysqli_connect($host, $user, $psw, $db);
