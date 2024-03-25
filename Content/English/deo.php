@@ -2,7 +2,7 @@
 session_start();
 
 $host = "localhost";
-$user = "Kuhlo731";
+$user = "root";
 $psw = "yqt";
 $db = "RecyclingDB";
 $conn = mysqli_connect($host, $user, $psw, $db);
@@ -21,59 +21,78 @@ if (!isset($_SESSION["username"]) || $_SESSION["userType"] !== "admin") {
     exit();
 }
 
+// Check if the POST request is from the microcontroller
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST["weight"], $_POST["station"])) {
+        // If the POST request is from the microcontroller for creating a deposit
+        $weight = mysqli_real_escape_string($conn, $_POST["weight"]);
+        $stationID = mysqli_real_escape_string($conn, $_POST["station"]);
+        $userID = $_SESSION["UserID"]; // Assuming you store user ID in the session
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["weight"], $_POST["station"])) {
-    $weight = mysqli_real_escape_string($conn, $_POST["weight"]);
-    $stationID = mysqli_real_escape_string($conn, $_POST["station"]);
-    $userID = $_SESSION["UserID"]; // Assuming you store user ID in the session
+        // Get the waste type based on the selected station
+        $getTypeQuery = mysqli_query($conn, "SELECT TypeID FROM MeasurementStation WHERE StationID = $stationID");
+        $rowType = mysqli_fetch_assoc($getTypeQuery);
+        $typeID = $rowType['TypeID'];
 
-    // Get the waste type based on the selected station
-    $getTypeQuery = mysqli_query($conn, "SELECT TypeID FROM MeasurementStation WHERE StationID = $stationID");
-    $rowType = mysqli_fetch_assoc($getTypeQuery);
-    $typeID = $rowType['TypeID'];
+        // Insert the new trash deposit into the database
+        $insertQuery = $conn->prepare("INSERT INTO WasteMeasurement (Weight, DateMeasure, InvoiceID, StationID, TypeID, UserID) VALUES (?, NOW(), null, ?, ?, ?)");
+        $insertQuery->bind_param("diii", $weight, $stationID, $typeID, $userID);
 
-    // Insert the new trash deposit into the database
-    $insertQuery = $conn->prepare("INSERT INTO WasteMeasurement (Weight, DateMeasure, InvoiceID, StationID, TypeID, UserID) VALUES (?, NOW(), null, ?, ?, ?)");
-    $insertQuery->bind_param("diii", $weight, $stationID, $typeID, $userID);
+        if ($insertQuery->execute()) {
+            // Calculate and create invoice instantly
+            $measurementID = mysqli_insert_id($conn);
 
-    if ($insertQuery->execute()) {
-        // Calculate and create invoice instantly
-        $measurementID = mysqli_insert_id($conn);
+            // Retrieve the waste type price
+            $resultType = mysqli_query($conn, "SELECT * FROM TypeWaste WHERE TypeID = $typeID");
+            $rowType = mysqli_fetch_assoc($resultType);
 
-        // Retrieve the waste type price
-        $resultType = mysqli_query($conn, "SELECT * FROM TypeWaste WHERE TypeID = $typeID");
-        $rowType = mysqli_fetch_assoc($resultType);
+            // Calculate the invoice amount in cents (assuming the price is in cents per gram)
+            $weightInGrams = $weight * 1000; // Convert weight to grams
+            $invoiceAmount = $weightInGrams * $rowType['Price'];
 
-        // Calculate the invoice amount in cents (assuming the price is in cents per gram)
-        $weightInGrams = $weight * 1000; // Convert weight to grams
-        $invoiceAmount = $weightInGrams * $rowType['Price'];
+            // Insert the invoice record with InvoiceID = 0 initially
+            $dateInvoice = date("Y-m-d H:i:s");
+            $isPaid = "unpaid";
+            $toPayAmount = $invoiceAmount / 100; // Convert cents to dollars
 
-        // Insert the invoice record with InvoiceID = 0 initially
-        $dateInvoice = date("Y-m-d H:i:s");
-        $isPaid = "unpaid";
-        $toPayAmount = $invoiceAmount / 100; // Convert cents to dollars
+            $insertInvoice = $conn->prepare("INSERT INTO Invoice (DateInvoice, IsPaid, ToPay) VALUES (?, ?, ?)");
+            $insertInvoice->bind_param("sss", $dateInvoice, $isPaid, $toPayAmount);
 
-        $insertInvoice = $conn->prepare("INSERT INTO Invoice (DateInvoice, IsPaid, ToPay) VALUES (?, ?, ?)");
-        $insertInvoice->bind_param("sss", $dateInvoice, $isPaid, $toPayAmount);
+            if ($insertInvoice->execute()) {
+                $invoiceID = mysqli_insert_id($conn);
 
-        if ($insertInvoice->execute()) {
-            $invoiceID = mysqli_insert_id($conn);
-
-            // Update the WasteMeasurement record with the invoice ID
-            $updateMeasurement = "UPDATE WasteMeasurement SET InvoiceID = $invoiceID WHERE MeasurementID = $measurementID";
-            if (mysqli_query($conn, $updateMeasurement)) {
-                echo "Deposit and Invoice created successfully.";
+                // Update the WasteMeasurement record with the invoice ID
+                $updateMeasurement = "UPDATE WasteMeasurement SET InvoiceID = $invoiceID WHERE MeasurementID = $measurementID";
+                if (mysqli_query($conn, $updateMeasurement)) {
+                    echo "Deposit and Invoice created successfully.";
+                } else {
+                    echo "Error updating WasteMeasurement record: " . mysqli_error($conn);
+                }
             } else {
-                echo "Error updating WasteMeasurement record: " . mysqli_error($conn);
+                echo "Error creating invoice: " . $insertInvoice->error;
             }
         } else {
-            echo "Error creating invoice: " . $insertInvoice->error;
+            echo "Error creating deposit: " . $insertQuery->error;
         }
-    } else {
-        echo "Error creating deposit: " . $insertQuery->error;
-    }
 
-    $insertQuery->close();
+        $insertQuery->close();
+    } elseif (isset($_POST["qr_code"])) {
+        // If the POST request is from the microcontroller for QR code validation
+        $qr_code = mysqli_real_escape_string($conn, $_POST["qr_code"]);
+
+        // Check if the QR code belongs to a user in the database
+        $checkUserQuery = mysqli_query($conn, "SELECT * FROM Users WHERE QRCode = '$qr_code'");
+        if (mysqli_num_rows($checkUserQuery) > 0) {
+            // QR code is valid
+            echo "valid";
+        } else {
+            // QR code is not valid
+            echo "invalid";
+        }
+    } elseif (isset($_POST["microcontroller_connected"])) {
+        // If the POST request is to check if the microcontroller connected
+        echo "Microcontroller connected";
+    }
 }
 
 // Retrieve measurement stations for the dropdown
@@ -160,7 +179,7 @@ $resultStations = mysqli_query($conn, "SELECT * FROM MeasurementStation");
         <h2>Create Trash Deposit</h2>
 
         <!-- Create Deposit Form -->
-        <form method="POST" action="">
+        <form id="depositForm" method="POST" action="">
             <label for="weight">Weight (kg):</label>
             <input type="number" step="0.01" name="weight" required><br>
 
